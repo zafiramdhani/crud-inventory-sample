@@ -15,7 +15,7 @@ class InventoryController extends Controller
         $data = Inventory::latest()->get();
 
         return view('inventory.index', ['data' => json_encode($data)]);
-        // return response()->json(['data' => $data]);
+        // return response()->json($data);
     }
 
     /**
@@ -103,6 +103,9 @@ class InventoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $data = Inventory::find($id);
+        $data->delete();
+
+        return response()->json(['data' => $data, 'message' => 'Item deleted successfully']);
     }
 }

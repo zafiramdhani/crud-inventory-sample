@@ -145,23 +145,33 @@ $('#submit-btn').on('click', function(e) {
 //   });
 // }
 
-function destroyUser() {
-  // $('#dg').datagrid('reload')
-  // var row = $('#dg').datagrid('getSelected');
-  // if (row){
-  //   $.messager.confirm('Confirm','Are you sure you want to destroy this user?',function(r){
-  //     if (r){
-  //       $.post('destroy_user.php',{id:row.id},function(result){
-  //         if (result.success){
-  //           $('#dg').datagrid('reload');    // reload the user data
-  //         } else {
-  //           $.messager.show({    // show error message
-  //             title: 'Error',
-  //             msg: result.errorMsg
-  //           });
-  //         }
-  //       },'json');
-  //     }
-  //   });
-  // }
+function destroyItem() {
+  let row = $('#dg').datagrid('getSelected');
+  if (row){
+    $.messager.confirm('Confirm', 'Are you sure you want to delete this item?', function(r) {
+      if(r) {
+        $.ajax({
+          url: '/inventory/' + row.id,
+          type: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function(response) {
+
+            $('td').filter(function() {
+              return $(this).text().indexOf(response.data.org) > -1;
+            }).parent().remove();
+            
+            console.log(response.data.id);
+            toastr.options = toastrOptions;
+            toastr.success(response.message, 'Success!');
+          },
+          error: function(http, errorStatus, exception) {
+            toastr.options = toastrOptions;
+            toastr.error(exception, errorStatus + ' ' + http);
+          }
+        })
+      }
+    });
+  }
 }
