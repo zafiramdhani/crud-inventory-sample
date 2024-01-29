@@ -14,12 +14,14 @@ const toastrOptions = {
   "hideEasing": "linear",
   "showMethod": "fadeIn",
   "hideMethod": "fadeOut"
-}
+};
 
-let url, type;
+let url, type, rowIndex;
 
+// INITIALIZE DATAGRID
 $('#dg').datagrid({
   columns: [[
+    {field:'id', title:'ID', sortable:true, hidden:true},
     {field:'org', title:'ORG', sortable:true},
     {field:'plant', title:'PLANT', sortable:true},
     {field:'sold_to', title:'SOLD TO', sortable:true},
@@ -37,21 +39,27 @@ $('#dg').datagrid({
   height: '55%'
 })
 
+// ADD ITEM
 function newUser() {
-  $('#dlg').dialog('open').dialog('center').dialog('setTitle','New Item');
+  $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'New Item');
   $('#fm').form('clear');
-  url = '/inventory'
-  type = 'POST'
+  url = '/inventory';
+  type = 'POST';
+  console.log(url + ' ' + type)
 }
 
+// EDIT & UPDATE ITEM
 function editUser() {
-  var row = $('#dg').datagrid('getSelected');
-  console.log(row)
+  let row = $('#dg').datagrid('getSelected');
+  rowIndex = $('#dg').datagrid('getRowIndex', row);
+
   if (row){
-    $('#dlg').dialog('open').dialog('center').dialog('setTitle','Edit Item');
-    $('#fm').form('load',row);
-    url = 'update_user.php?id='+row.id;
+    $('#dlg').dialog('open').dialog('center').dialog('setTitle', 'Edit Item');
+    $('#fm').form('load', row);
+    url = '/inventory/' + row.id;
+    type = 'PUT';
   }
+  console.log(url + ' ' + type)
 }
 
 // add item
@@ -79,27 +87,38 @@ function editUser() {
 //     }
 //   })
 // })
-$('#submit-btn').on('click', function(e) {
-  e.preventDefault()
 
-  let data = $('#fm').serialize()
+// SUBMIT EVENT
+$('#submit-btn').on('click', function(e) {
+  e.preventDefault();
+  let data = $('#fm').serialize();
+
   $.ajax({
-    url: '/inventory',
-    type: 'POST',
+    url: url,
+    type: type,
     data: data,
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
     success: function(response) {
-      $('#dlg').dialog('close')
-      $('#dg').datagrid('insertRow', {index: 0, row: response.data})
+      $('#dlg').dialog('close');
 
-      toastr.options = toastrOptions
-      toastr.success(response.message, 'Success!')
+      switch (type) {
+        case 'POST':
+          $('#dg').datagrid('insertRow', {index: 0, row: response.data});
+          break;
+        case 'PUT':
+          $('#dg').datagrid('updateRow', {index: rowIndex, row: response.data});
+          break;
+        default:
+          break;
+      }
+      toastr.options = toastrOptions;
+      toastr.success(response.message, 'Success!');
     },
     error: function(http, errorStatus, exception) {
-      toastr.options = toastrOptions
-      toastr.error(exception, errorStatus + ' ' + http)
+      toastr.options = toastrOptions;
+      toastr.error(exception, errorStatus + ' ' + http);
     }
   })
 })

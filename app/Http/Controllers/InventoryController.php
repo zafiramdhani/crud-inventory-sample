@@ -57,7 +57,7 @@ class InventoryController extends Controller
         // ];
 
         // Inventory::create($data);
-        return response()->json(['message' => 'New item added successfully', 'data' => $data]);
+        return response()->json(['data' => $data, 'message' => 'Item added successfully']);
         // return redirect()->back()->with('newData', $data);
     }
 
@@ -66,15 +66,15 @@ class InventoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id, Request $request)
     {
-        //
+
     }
 
     /**
@@ -82,7 +82,20 @@ class InventoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = Inventory::find($id);
+        $data->org = $request->org;
+        $data->plant = $request->plant;
+        $data->sold_to = $request->sold_to;
+        $data->ship_to = $request->ship_to;
+        $data->material = $request->material;
+        $data->distrik = $request->distrik;
+        $data->qty_minimum = $request->qty_minimum;
+        $data->qty_bonus = $request->qty_bonus;
+        $data->qty_status = $request->qty_status;
+        $data->created_by = $request->created_by;
+        $data->save();
+
+        return response()->json(['data' => $data, 'message' => 'Item edited successfully']);
     }
 
     /**

@@ -48,6 +48,7 @@
         ?>
         
         <tr id={{ $item->id }}>
+          <td>{{ $item->id }}</td>
           <td>{{ $item->org }}</td>
           <td>{{ $item->plant }}</td>
           <td>{{ $item->sold_to }}</td>
