@@ -62,32 +62,6 @@ function editUser() {
   console.log(url + ' ' + type)
 }
 
-// add item
-// $('#submit-btn').on('click', function(e) {
-//   e.preventDefault()
-
-//   let data = $('#fm').serialize()
-//   $.ajax({
-//     url: "/inventory",
-//     type: 'POST',
-//     data: data,
-//     headers: {
-//       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//     },
-//     success: function(response) {
-//       $('#dlg').dialog('close')
-//       $('#dg').datagrid('insertRow', {index: 0, row: response.data})
-
-//       toastr.options = toastrOptions
-//       toastr.success(response.message, 'Success!')
-//     },
-//     error: function(http, errorStatus, exception) {
-//       toastr.options = toastrOptions
-//       toastr.error(exception, errorStatus + ' ' + http)
-//     }
-//   })
-// })
-
 // SUBMIT EVENT
 $('#submit-btn').on('click', function(e) {
   e.preventDefault();
@@ -122,28 +96,6 @@ $('#submit-btn').on('click', function(e) {
     }
   })
 })
-
-// function saveUser() {
-//   $('#fm').form('submit',{
-//     url: '/inventory',
-//     iframe: false,
-//     onSubmit: function(){
-//       return $(this).form('validate');
-//     },
-//     success: function(result){
-//       var result = eval('('+result+')');
-//       if (result.errorMsg){
-//         $.messager.show({
-//           title: 'Error',
-//           msg: result.errorMsg
-//         });
-//       } else {
-//         $('#dlg').dialog('close');        // close the dialog
-//         $('#dg').datagrid('reload');    // reload the user data
-//       }
-//     }
-//   });
-// }
 
 function destroyItem() {
   let row = $('#dg').datagrid('getSelected');
